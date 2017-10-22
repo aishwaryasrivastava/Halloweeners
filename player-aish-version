@@ -1,0 +1,177 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class player : MonoBehaviour {
+	Vector3 speed = new Vector3 (0, 0, 0);
+	float maxSpeed = 1.0f;
+	float acceleration = 0.01f;
+	bool isMoving = false;
+	bool isRotatingLeft = false;
+	bool isRotatingRight = false;
+
+	enum isFacing {Up, Down, Right, Left};
+	float lastAngle = 0.0f;
+
+	isFacing current;
+
+
+	// Use this for initialization
+	void Start () {
+		current = isFacing.Up;
+	}
+
+
+	
+	// Update is called once per frame
+	void Update () {
+		
+		Vector3 position = transform.position;
+		Vector3 rotation = transform.eulerAngles;
+		print (current);
+		float angleCovered = Mathf.Abs (lastAngle - rotation.y);
+		if (((angleCovered > 89.99) && (angleCovered < 90.01))||(angleCovered > 269.99)&&(angleCovered<270.01)) {
+			isRotatingLeft = false;
+			isRotatingRight = false;
+			lastAngle = rotation.y;
+
+		}
+
+
+		if (isRotatingRight) {
+			rotation.y += 5.0f;
+		}
+
+		if (isRotatingLeft) {
+			rotation.y -= 5.0f;
+		}
+
+		angleCovered = Mathf.Abs (lastAngle - rotation.y);
+		if (!isRotatingRight && Input.GetKeyDown (KeyCode.LeftArrow)) {
+			isRotatingLeft = true;
+
+			isFacing currentCopy = current;
+			switch (currentCopy) {
+			case isFacing.Up:
+				current = isFacing.Left;
+				break;
+			case isFacing.Left:
+				current = isFacing.Down;
+				break;
+			case isFacing.Down:
+				current = isFacing.Right;
+				break;
+			case isFacing.Right:
+				current = isFacing.Up;
+				break;
+			}
+
+
+		}
+
+		if (!isRotatingLeft && Input.GetKeyDown (KeyCode.RightArrow)) {
+
+			isRotatingRight = true;
+
+			isFacing currentCopy = current;
+			switch (currentCopy) {
+			case isFacing.Up:
+				current = isFacing.Right;
+				break;
+			case isFacing.Right:
+				current = isFacing.Down;
+				break;
+			case isFacing.Down:
+				current = isFacing.Left;
+				break;
+			case isFacing.Left:
+				current = isFacing.Up;
+				break;
+			}
+
+
+
+		}
+
+
+		if (Input.GetKey (KeyCode.UpArrow)) {
+			isMoving = true;
+
+			switch (current) {
+			case isFacing.Up:
+				if (speed.x < maxSpeed) {
+					speed.z += acceleration;
+				}
+				position.z += speed.z;
+				break;
+			case isFacing.Down:
+				if (speed.z < maxSpeed) {
+					speed.z += acceleration;
+				}
+				position.z -= speed.z; 
+				break;
+			case isFacing.Right:
+				if (speed.x < maxSpeed) {
+					speed.x += acceleration;
+				}
+				position.x += speed.x;
+				break;
+			case isFacing.Left:
+				if (speed.x < maxSpeed) {
+					speed.x += acceleration;
+				}
+				position.x -= speed.x;
+				break;
+
+			}
+		} else if (isMoving) {
+			switch (current) {
+			case isFacing.Up:
+				if (speed.z > 0) {
+					speed.z -= acceleration;
+				} else {
+					speed.z = 0;
+					isMoving = false;
+				}
+				position.z += speed.z;
+				break;
+			case isFacing.Down:
+				if (speed.z > 0) {
+					speed.z -= acceleration;
+				} else {
+					speed.z = 0;
+					isMoving = false;
+				}
+				position.z -= speed.z;
+				break;
+			case isFacing.Right:
+				if (speed.x > 0) {
+					speed.x -= acceleration;
+				} else {
+					speed.x = 0;
+					isMoving = false;
+				}
+				position.x += speed.x;
+				break;
+			case isFacing.Left:
+				if (speed.x > 0) {
+					speed.x -= acceleration;
+				} else {
+					speed.x = 0;
+					isMoving = false;
+				}
+				position.x -= speed.x;
+				break;
+
+
+			}
+
+		
+		}
+			
+
+		transform.eulerAngles = rotation;
+		transform.position = position;
+	}
+		
+}
