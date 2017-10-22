@@ -4,6 +4,11 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
 
+    public GameObject thePlayer;
+    private void Awake()
+    {
+        thePlayer.SetActive(false);
+    }
     private void Start()
     {
         BeginGame();
@@ -24,8 +29,10 @@ public class GameManager : MonoBehaviour
 
     private void BeginGame()
     {
+
         mazeInstance = Instantiate(mazePrefab) as Maze;
-        StartCoroutine(mazeInstance.Generate());
+        StartCoroutine(mazeInstance.Generate(thePlayer));
+
     }
 
     private void RestartGame()

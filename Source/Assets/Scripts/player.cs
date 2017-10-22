@@ -7,10 +7,10 @@ public class player : MonoBehaviour
     float speed = 0.1f;
     bool leftArrowState = false;
     bool rightArrowState = false;
-    // Use this for initialization
+
     void Start()
     {
-
+       
     }
 
     // Update is called once per frame

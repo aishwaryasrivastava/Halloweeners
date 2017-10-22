@@ -47,6 +47,8 @@ public class Maze : MonoBehaviour {
     public float generationStepDelay;
     public IntVector2 size;
 
+
+
     public MazeCell GetCell(IntVector2 coordinates) {
         return cells[coordinates.x, coordinates.z];
     }
@@ -88,8 +90,8 @@ public class Maze : MonoBehaviour {
             // No longer remove the cell here.
         }
     }
-
-    public IEnumerator Generate()
+    
+    public IEnumerator Generate(GameObject thePlayer)
     {
         WaitForSeconds delay = new WaitForSeconds(generationStepDelay);
         cells = new MazeCell[size.x, size.z];
@@ -100,6 +102,8 @@ public class Maze : MonoBehaviour {
             yield return delay;
             DoNextGenerationStep(activeCells);
         }
+        thePlayer.transform.position = new Vector3((float)(size.x* gameObject.transform.localScale.x/2- 2.25),2,(float)(size.z* gameObject.transform.localScale.z/2- 2.25));
+        thePlayer.SetActive(true);
     }
 
     private MazeCell CreateCell(IntVector2 coordinates)
